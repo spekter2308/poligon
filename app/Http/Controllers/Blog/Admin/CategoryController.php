@@ -16,7 +16,7 @@ class CategoryController extends BaseController
     {
         $paginator = BlogCategory::paginate(8);
 
-        return view('blog.admin.category.index', compact('paginator'));
+        return view('blog.admin.categories.index', compact('paginator'));
     }
 
     /**
@@ -62,7 +62,7 @@ class CategoryController extends BaseController
         $item = BlogCategory::findOrFail($id);
         $categoryList = BlogCategory::all();
 
-        return view('blog.admin.category.edit', compact('item', 'categoryList'));
+        return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -74,7 +74,27 @@ class CategoryController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        dd(__METHOD__, $request->all(), $id);
+        $item = BlogCategory::find($id);
+        if(empty($item)){
+        	return back()
+				->withErrors(['msg' => "Запис id=[{$id}] не знайдено"])
+				->withInput();
+		}
+
+		$data = $request->all();
+        $result = $item
+			->fill($data)
+			->save();
+
+        if($result){
+        	return redirect()
+				->route('blog.admin.categories.edit', $item->id)
+				->with(['success' => 'Успішно збережено']);
+		} else {
+        	return back()
+				->withErrors(['msg' => 'Помилка збереження'])
+				->withInput();
+		}
     }
 
     /**

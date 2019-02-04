@@ -49,8 +49,9 @@
 
 					<div class="form-group">
 						<label for="description">Опис</label>
-						<textarea class="form-control" id="description" rows="3">
-							{{ $item->description }}
+						<textarea class="form-control"
+								  id="description"
+								  rows="3">{{ old('description', $item->description) }}
 						</textarea>
 					</div>
 				</div>
