@@ -35,6 +35,7 @@
  });
  //<
 
-//Route::resource('rest', 'RestTestController')->names('restTest');
-
+ //>Test for templating with blade
+Route::resource('rest', 'RestTestController')->names('test');
+ //<
 
