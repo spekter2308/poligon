@@ -14,8 +14,7 @@ class RestTestController extends Controller
      */
     public function index()
     {
-        $username = 'HEllo';
-		return view('test.test', compact('username'));
+		return view('test.test');
     }
 
     /**

@@ -23,7 +23,8 @@ class CreateBlogCategoriesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-        });
+
+		});
     }
 
     /**

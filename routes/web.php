@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -11,31 +11,30 @@
 |
 */
 
- Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function () {
+	return view('welcome');
 });
- Auth::routes();
- Route::get('/home', 'HomeController@index')->name('home');
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
 
- Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function() {
+Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function() {
 	Route::resource('posts', 'PostController')->names('blog.posts');
 });
 
 //>Admin panel
- $groupData = [
- 	'namespace' => 'Blog\Admin',
+$groupData = [
+	'namespace' => 'Blog\Admin',
 	'prefix' => 'admin/blog',
- ];
- Route::group($groupData, function() {
- 	//BlogCategory
-	 $methods = ['index', 'edit', 'update', 'create', 'store', ];
-	 Route::resource('categories', 'CategoryController')
-		 ->only($methods)
-		 ->names('blog.admin.categories');
- });
- //<
+];
+Route::group($groupData, function() {
+	//BlogCategory
+	$methods = ['index', 'edit', 'update', 'create', 'store', ];
+	Route::resource('categories', 'CategoryController')
+		->only($methods)
+		->names('blog.admin.categories');
+});
+//<
 
- //>Test for templating with blade
-Route::resource('rest', 'RestTestController')->names('test');
- //<
+//Route::resource('rest', 'RestTestController')->names('restTest');
+
 
