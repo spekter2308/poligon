@@ -11,6 +11,11 @@ class TestTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+    	$role = factory(App\TestRoles::class, 'admin')->create();
+        factory(App\Test::class, 'admin', 5)->create()->each(function ($test) use ($role) {
+        	$role->tests()->attach($test);
+        	$test->test_additional()->save(factory(App\TestAdditional::class, 'admin')->make()) ;
+
+		});
     }
 }
