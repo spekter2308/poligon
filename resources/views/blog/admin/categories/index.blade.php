@@ -38,17 +38,12 @@
 				</div>
 			</div>
 		</div>
+		@if($paginator->total() > $paginator->count())
+			<br>
+			<nav class="pagination" role="navigation" aria-label="pagination">
+				{{ $paginator->links() }}
+			</nav>
+		@endif
 	</div>
-	@if($paginator->total() > $paginator->count())
-		<br>
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-12">
-					<div class="cart">
-						{{ $paginator->links() }}
-					</div>
-				</div>
-			</div>
-		</div>
-	@endif
+
 @endsection

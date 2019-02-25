@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\BlogCategoryCreateRequest;
+use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
 
 class CategoryController extends BaseController
 {
-    /**
+
+	/*public function __construct()
+	{
+		$this->middleware('auth');
+	}*/
+
+	/**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -26,18 +34,34 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-		dd(__METHOD__);
+		$item = new BlogCategory();
+		$categoryList = BlogCategory::all();
+
+		return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\BlogCategoryCreateRequest
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogCategoryCreateRequest $request)
     {
-		dd(__METHOD__);
+		$data = $request->input();
+		if(empty($data['slug'])){
+			$data['slug'] = str_slug($data['title']);
+		}
+
+		$item = (new BlogCategory())->create($data);
+
+		if($item){
+			return redirect()->route('blog.admin.categories.edit', [$item->id])
+				->with(['success' => 'Успішно додано']);
+		} else {
+			return back()->withErrors(['msg' => 'Помилка додавання'])
+				->withInput();
+		}
     }
 
     /**
@@ -48,7 +72,7 @@ class CategoryController extends BaseController
      */
     public function show($id)
     {
-		//dd(__METHOD__);
+		dd(__METHOD__);
     }
 
     /**
@@ -59,8 +83,9 @@ class CategoryController extends BaseController
      */
     public function edit($id)
     {
-        $item = BlogCategory::findOrFail($id);
+    	$item = BlogCategory::findOrFail($id);
         $categoryList = BlogCategory::all();
+		//dd(collect($item)->pluck('id'));
 
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -68,13 +93,47 @@ class CategoryController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\BlogCategoryUpdateRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        dd(__METHOD__, $request->all(), $id);
+		/*$rules = [
+    		'title' => 'required|min:3|max:200',
+			'slug' => 'max:200',
+			'description' => 'string|min:3|max:500',
+			'parent_id' => 'required|integer|exists:blog_categories,id'
+		];*/
+		//$validated = $request->validate($rules);
+
+		//dd($validated);
+
+		$item = BlogCategory::find($id);
+
+		if(empty($item)){
+       	return back()
+			->withErrors(['msg' => "Запис id=[{$id}] не знайденo"])
+			->withInput();
+	   }
+	   $data = $request->all();
+		if(empty($data['slug'])){
+			$data['slug'] = str_slug($data['title']);
+		}
+
+       $result = $item
+		   ->fill($data)
+		   ->save();
+
+       if($result){
+       	return redirect()
+			->route('blog.admin.categories.edit', $id)
+			->with(['success' => "Успішно збережено"]);
+	   } else {
+       	return back()
+			->withErrors(['msg' => "Помилка збереження"])
+			->withInput();
+	   }
     }
 
     /**

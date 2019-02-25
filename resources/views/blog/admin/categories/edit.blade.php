@@ -4,18 +4,27 @@
 	@php
 		/** @var \App\Models\BlogCategory $item */
 	@endphp
-	<form action="{{ route('blog.admin.categories.update', $item->id) }}" method="POST">
+
+	@include('errors')
+	@include('success')
+
+	@if ($item->exists)
+		<form method="POST" action="{{ route('blog.admin.categories.update', $item->id) }}">
 		@method('PATCH')
+	@else
+		<form method="POST" action="{{ route('blog.admin.categories.store') }}">
+	@endif
+
 		@csrf
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-8">
-					@include('blog.admin.categories.includes.item_edit_main_col')
-				</div>
-				<div class="col-md-4">
-					@include('blog.admin.categories.includes.item_edit_add_col')
-				</div>
+		<div class="task-container columns">
+			<div class="column is-three-fifths">
+				@include('blog.admin.categories.includes.item_edit_main_col')
 			</div>
+			<div class="column">
+				@include('blog.admin.categories.includes.item_edit_add_col')
+			</div>
+
 		</div>
 	</form>
+
 @endsection
