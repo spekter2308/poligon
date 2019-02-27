@@ -35,7 +35,9 @@ class PostController extends BaseController
      */
     public function index()
     {
-        return view('blog.admin.posts.index');
+		$paginator = $this->blogPostReopsitory->getAllWithPaginate(25);
+
+        return view('blog.admin.posts.index', compact('paginator'));
     }
 
     /**
